@@ -77,48 +77,81 @@ public class DetalhesPracasActivity extends AppCompatActivity implements GoogleA
         //ConverteLatitude(latitudeUsuario, longitudeUsuario, "-29.926859", "-51.039984");
 
         if (Skate) {
+            String instalacoes = "skatee";
+            i.putExtra(instalacoes, true);
             ArrayList<Praca> pracas = adicionaPracas();
             ArrayAdapter adapter = new PracaAdapter(this, pracas);
-            lista.setAdapter(adapter);
-
-
+            if(!adapter.isEmpty())
+             lista.setAdapter(adapter);
         }
 
-        /*if (areaDog) {
-            fireStore.collection("Parks").document("PracasGravatai").collection("AreaDog").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            pracass.add(document.getString("Nome"));
-                        }
+        if (areaDog) {
+            String instalacoes = "areaDog";
+            i.putExtra(instalacoes, true);
+            ArrayList<Praca> pracas = adicionaPracas();
+            ArrayAdapter adapter = new PracaAdapter(this, pracas);
+            if(!adapter.isEmpty())
+                 lista.setAdapter(adapter);
+        }
 
-                    }
-                }
-            });
-        }*/
 
     }
 
     private ArrayList<Praca> adicionaPracas() {
         final ArrayList<Praca> pracas = new ArrayList<Praca>();
-        fireStore.collection("Parks").document("PracasGravatai").collection("Skate").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        if(getIntent().getBooleanExtra("skatee",false)) {
+            fireStore.collection("Parks").document("PracasGravatai").collection("Skate").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String nome = (document.getString("Nome"));
+                            String facilidades = (document.getString("Facilidades"));
+                            Praca p = new Praca(nome, facilidades);
+                            pracas.add(p);
+                        }
+
+                    }
+                }
+            });
+        }if(getIntent().getBooleanExtra("areaDog",false)){
+            fireStore.collection("Parks").document("PracasGravatai").collection("AreaDog").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String nome = (document.getString("Nome"));
+                            String facilidades = (document.getString("Facilidades"));
+                            Praca p = new Praca(nome, facilidades);
+                            pracas.add(p);
+                        }
+
+                    }
+                }
+            });
+        }
+        return pracas;
+    }
+
+   /* private ArrayList<Praca> adicionaPracasAreaDog() {
+        final ArrayList<Praca> pracas = new ArrayList<Praca>();
+        fireStore.collection("Parks").document("PracasGravatai").collection("AreaDog").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                     String nome = (document.getString("Nome"));
-                     String facilidades = (document.getString("Facilidades"));
-
-                     Praca p = new Praca(nome,facilidades);
-                     pracas.add(p);
+                        String nome = (document.getString("Nome"));
+                        String facilidades = (document.getString("Facilidades"));
+                        Praca p = new Praca(nome,facilidades);
+                        pracas.add(p);
                     }
 
                 }
             }
         });
         return  pracas;
-    }
+    }*/
+
 
     private synchronized void callConnection() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
