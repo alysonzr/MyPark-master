@@ -11,7 +11,7 @@
         android:id="@+id/view4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#42000000"
+        android:background="#757575"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -41,51 +41,46 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textView2"
-                    android:layout_width="311dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="47dp"
-                    android:layout_marginStart="23dp"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginEnd="35dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="center_horizontal"
                     android:fontFamily="@font/lora_bolditalic"
                     android:text="Escolha as opçoes abaixo"
-                    android:textColor="#0F0F0F"
-                    android:textSize="26dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.261"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:textColor="#FFFFFF"
+                    android:textSize="23dp" />
 
                 <CheckBox
                     android:id="@+id/checkBike"
                     android:layout_width="wrap_content"
                     android:layout_height="95dp"
-                    android:layout_marginStart="23dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="35dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="30dp"
                     android:background="@drawable/biking_background"
                     android:fontFamily="@font/lora_bolditalic"
                     android:text="Pista de Bike"
-                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textAlignment="viewStart"
                     android:textSize="24sp" />
 
                 <CheckBox
                     android:id="@+id/checkCorrida"
                     android:layout_width="wrap_content"
                     android:layout_height="95dp"
-                    android:layout_marginStart="23dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="35dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="30dp"
                     android:background="@drawable/coastal_walkway"
                     android:fontFamily="@font/lora_bolditalic"
                     android:text="Pista de corrida"
-                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textAlignment="viewStart"
                     android:textSize="24sp" />
 
 
@@ -93,60 +88,57 @@
                     android:id="@+id/checkDog"
                     android:layout_width="wrap_content"
                     android:layout_height="95dp"
-                    android:layout_marginStart="23dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="35dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="30dp"
                     android:background="@drawable/dog_area"
                     android:fontFamily="@font/lora_bolditalic"
-                    android:gravity="center"
-                    android:text="Area para dogs"
-                    android:textColor="#0F0F0F"
+                    android:textAlignment="viewStart"
+                    android:text="Área para dogs"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp" />
 
                 <CheckBox
                     android:id="@+id/checkSkate"
                     android:layout_width="wrap_content"
                     android:layout_height="95dp"
-                    android:layout_marginStart="23dp"
-                    android:layout_marginTop="10dp"
-                    android:bottomRightRadius="24dp"
-                    android:bottomLeftRadius="24dp"
-                    android:topRightRadius="24dp"
-                    android:topLeftRadius="24dp"
-                    android:layout_marginEnd="35dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="30dp"
                     android:background="@drawable/skate_park"
                     android:fontFamily="@font/lora_bolditalic"
-                    android:text="Pista de Shake"
-                    android:buttonTint="#77dd77"
-                    android:textAlignment="center"
+                    android:text="Pista de Skate"
+                    android:textColor="#FFFFFF"
+                    android:textAlignment="viewStart"
                     android:textSize="24sp" />
 
                 <CheckBox
                     android:id="@+id/checkAreaInfantil"
                     android:layout_width="wrap_content"
                     android:layout_height="95dp"
-                    android:layout_marginStart="23dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="35dp"
-                    android:background="@drawable/picnic"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="30dp"
+                    android:background="@drawable/area_crianca_detalhes"
                     android:fontFamily="@font/lora_bolditalic"
-                    android:text="Area infantil"
-                    android:textAlignment="center"
+                    android:text="Área infantil"
+                    android:textColor="#FFFFFF"
+                    android:textAlignment="viewStart"
                     android:textSize="24sp" />
 
                 <CheckBox
                     android:id="@+id/checkAcademia"
                     android:layout_width="wrap_content"
                     android:layout_height="95dp"
-                    android:layout_marginStart="23dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="35dp"
+                    android:layout_marginTop="7dp"
                     android:background="@drawable/academia"
                     android:fontFamily="@font/lora_bolditalic"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="30dp"
                     android:text="Academia ao ar livre"
-                    android:textAlignment="center"
+                    android:textAlignment="viewStart"
                     android:textSize="24sp" />
-
 
 
             </LinearLayout>
@@ -154,19 +146,17 @@
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_gravity="bottom"
             android:gravity="center"
             android:orientation="horizontal"
-            android:paddingBottom="25dp">
+            android:layout_marginBottom="10dp">
 
             <Button
                 android:id="@+id/btnPesquisar"
                 android:layout_width="230dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="8dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/roundedbutton"
                 android:fontFamily="@font/lora_regular"
                 android:text="Pesquisar"

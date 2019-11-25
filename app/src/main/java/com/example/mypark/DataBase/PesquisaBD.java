@@ -1,12 +1,10 @@
 package com.example.mypark.DataBase;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.example.mypark.DetalhesPracasActivity;
 import com.example.mypark.Praca;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;

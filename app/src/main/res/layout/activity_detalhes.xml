@@ -7,4 +7,34 @@
     android:layout_height="match_parent"
     tools:context=".DetalhesActivity">
 
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="250dp" ></android.support.v4.view.ViewPager>
+
+    <!--<com.loopj.android.image.SmartImageView
+        android:id="@+id/meuSmartImage"
+        android:layout_width="match_parent"
+        android:layout_height="250dp" />-->
+
+    <TextView
+        android:id="@+id/txtEndereco"
+        android:layout_width="395dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="255dp"
+        android:text="Endereco"
+        android:textColor="#000000"
+        android:textSize="16dp" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="370dp"
+        android:layout_marginTop="310dp" />
+
+    <ListView
+        android:id="@+id/listDetalhes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </android.support.design.widget.CoordinatorLayout>

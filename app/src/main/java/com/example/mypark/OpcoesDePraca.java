@@ -1,51 +1,40 @@
 package com.example.mypark;
-
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.ArrayMap;
 import android.util.Log;
 import java.lang.Math;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mypark.DataBase.PesquisaBD;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 
-public class DetalhesPracasActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+public class OpcoesDePraca extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
     private Location location;
-
+    protected  static  final int TIMER_RUNTIME = 50000;
     private Double latitudeUsuario;
     private Double longitudeUsuario;
     private Double result;
@@ -54,18 +43,18 @@ public class DetalhesPracasActivity extends AppCompatActivity implements GoogleA
     TextView textView2;
     FirebaseFirestore fireStore;
 
-   // ArrayList<String> pracass = new ArrayList<>();
+    protected  boolean mbActive;
+    protected ProgressBar nproProgressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhes_pracas);
+        setTitle("MySquare");
         fireStore = FirebaseFirestore.getInstance();
         callConnection();
+        final ListView lista = (ListView) findViewById(R.id.listPracas);
 
-        ListView lista = (ListView) findViewById(R.id.listPracas);
-
-
-        textView2 = findViewById(R.id.textView2);
 
         Intent i = getIntent();
         Boolean Skate = i.getBooleanExtra("skatee", false);
@@ -73,84 +62,101 @@ public class DetalhesPracasActivity extends AppCompatActivity implements GoogleA
         Boolean corrida = i.getBooleanExtra("Corrida", false);
         Boolean areaDog = i.getBooleanExtra("areaDog", false);
 
-
         //ConverteLatitude(latitudeUsuario, longitudeUsuario, "-29.926859", "-51.039984");
 
         if (Skate) {
-            String instalacoes = "skatee";
-            i.putExtra(instalacoes, true);
-            ArrayList<Praca> pracas = adicionaPracas();
-            ArrayAdapter adapter = new PracaAdapter(this, pracas);
-            if(!adapter.isEmpty())
-             lista.setAdapter(adapter);
-        }
-
-        if (areaDog) {
-            String instalacoes = "areaDog";
-            i.putExtra(instalacoes, true);
-            ArrayList<Praca> pracas = adicionaPracas();
-            ArrayAdapter adapter = new PracaAdapter(this, pracas);
-            if(!adapter.isEmpty())
-                 lista.setAdapter(adapter);
-        }
-
-
-    }
-
-    private ArrayList<Praca> adicionaPracas() {
-        final ArrayList<Praca> pracas = new ArrayList<Praca>();
-        if(getIntent().getBooleanExtra("skatee",false)) {
+            final ArrayList<Praca> pracas = new ArrayList<Praca>();
             fireStore.collection("Parks").document("PracasGravatai").collection("Skate").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
+                            String uid = (document.getId());
                             String nome = (document.getString("Nome"));
-                            String facilidades = (document.getString("Facilidades"));
-                            Praca p = new Praca(nome, facilidades);
-                            pracas.add(p);
-                        }
+                            String instalacoes = (document.getString("Facilidades"));
+                            String endereco = (document.getString("Endereco"));
+                            ArrayList imagem = ((ArrayList) document.get("Imagens"));
 
-                    }
-                }
-            });
-        }if(getIntent().getBooleanExtra("areaDog",false)){
-            fireStore.collection("Parks").document("PracasGravatai").collection("AreaDog").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            String nome = (document.getString("Nome"));
-                            String facilidades = (document.getString("Facilidades"));
-                            Praca p = new Praca(nome, facilidades);
+                            Praca p = new Praca(uid,nome, instalacoes,endereco,imagem);
                             pracas.add(p);
+                            ArrayAdapter adapter = new PracaAdapter(OpcoesDePraca.this,pracas);
+                            lista.setAdapter(adapter);
                         }
-
                     }
                 }
             });
         }
-        return pracas;
-    }
-
-   /* private ArrayList<Praca> adicionaPracasAreaDog() {
-        final ArrayList<Praca> pracas = new ArrayList<Praca>();
-        fireStore.collection("Parks").document("PracasGravatai").collection("AreaDog").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        String nome = (document.getString("Nome"));
-                        String facilidades = (document.getString("Facilidades"));
-                        Praca p = new Praca(nome,facilidades);
-                        pracas.add(p);
+        if(areaCri){
+            final ArrayList<Praca> pracas = new ArrayList<Praca>();
+            fireStore.collection("Parks").document("PracasGravatai").collection("AreaCrianca").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String uid = (document.getId());
+                            String nome = (document.getString("Nome"));
+                            String instalacoes = (document.getString("Instalacoes"));
+                            String endereco = (document.getString("Endereco"));;
+                            //String imagem = (document.getString("Imagens"));
+                            ArrayList imagem = ((ArrayList) document.get("Imagens"));
+                            Praca p = new Praca(uid,nome, instalacoes,endereco,imagem);
+                            pracas.add(p);
+                            ArrayAdapter adapter = new PracaAdapter(OpcoesDePraca.this,pracas);
+                            lista.setAdapter(adapter);
+                        }
                     }
-
                 }
+            });
+        }
+
+        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                // ListView Clicked item index
+                int itemPosition = position;
+
+                // ListView Clicked item value
+                Praca  itemValue = (Praca) lista.getItemAtPosition(position);
+                String uid = itemValue.getUid();
+                String nome = itemValue.getNome();
+                String Instalacoes = itemValue.getFacilidades();
+                String endereco = itemValue.getEndereco();
+                ArrayList imagem = itemValue.getImagem();
+                Log.d("LOG", String.valueOf(imagem));
+
+                Intent i = new Intent(OpcoesDePraca.this, DetalhesActivity.class);
+                i.putExtra("uid",uid);
+                i.putExtra("nome",nome);
+                i.putExtra("Instalacoes",Instalacoes);
+                i.putExtra("endereco",endereco);
+                i.putExtra("imagem", imagem);
+
+                 startActivity(i);
+                Toast.makeText(getApplicationContext(), "Position :"+itemPosition+"  itemValue : " +uid , Toast.LENGTH_LONG).show();
+
             }
         });
-        return  pracas;
-    }*/
+
+    }
+
+
+
+
+
+
+
+    public void updateProgress(final int timePassed){
+            if(null != nproProgressBar){
+                final int progress = nproProgressBar.getMax() * timePassed / TIMER_RUNTIME;
+                nproProgressBar.setProgress(progress);
+            }
+    }
+    public  void onContinue(){
+            Log.d("MensagemFinal", "sua barra de logging terminou");
+    }
+
 
 
     private synchronized void callConnection() {
