@@ -9,19 +9,21 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 public class ViewPagerAdapter  extends PagerAdapter {
     private Context context;
-    private String[] imageUrls;
+    private ArrayList imageUrls;
 
 
-    ViewPagerAdapter(Context context, String[] imageUrls){
+    ViewPagerAdapter(Context context, ArrayList imageUrls){
         this.context = context;
         this.imageUrls = imageUrls;
     }
 
     @Override
     public int getCount() {
-        return imageUrls.length;
+        return imageUrls.size();
     }
 
     @Override
@@ -34,7 +36,7 @@ public class ViewPagerAdapter  extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         ImageView imageView = new ImageView(context);
         Picasso.get()
-                .load(imageUrls[position])
+                .load((String) imageUrls.get(position))
                 .fit()
                 .centerCrop()
                 .into(imageView);

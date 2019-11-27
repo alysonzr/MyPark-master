@@ -12,15 +12,25 @@ public class Praca {
     private String facilidades;
     private String endereco;
     private ArrayList imagem;
+    private String icon;
 
 
-    public Praca(String uid, String nome, String facilidades, String endereco, ArrayList imagem) {
+    public Praca(String uid, String nome, String facilidades, String endereco, ArrayList imagem,String icon) {
         this.uid = uid;
         this.nome = nome;
         this.facilidades = facilidades;
         this.endereco = endereco;
         this.imagem = imagem;
+        this.icon = icon;
 
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public ArrayList getImagem() {

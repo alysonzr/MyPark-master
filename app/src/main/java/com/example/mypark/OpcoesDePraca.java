@@ -75,9 +75,10 @@ public class OpcoesDePraca extends AppCompatActivity implements GoogleApiClient.
                             String nome = (document.getString("Nome"));
                             String instalacoes = (document.getString("Facilidades"));
                             String endereco = (document.getString("Endereco"));
-                            ArrayList imagem = ((ArrayList) document.get("Imagens"));
+                            ArrayList imagem = (ArrayList) document.get("Imagens");
+                            String icon = (document.getString("IconUrl"));
 
-                            Praca p = new Praca(uid,nome, instalacoes,endereco,imagem);
+                            Praca p = new Praca(uid,nome, instalacoes,endereco,imagem,icon);
                             pracas.add(p);
                             ArrayAdapter adapter = new PracaAdapter(OpcoesDePraca.this,pracas);
                             lista.setAdapter(adapter);
@@ -97,9 +98,10 @@ public class OpcoesDePraca extends AppCompatActivity implements GoogleApiClient.
                             String nome = (document.getString("Nome"));
                             String instalacoes = (document.getString("Instalacoes"));
                             String endereco = (document.getString("Endereco"));;
-                            //String imagem = (document.getString("Imagens"));
-                            ArrayList imagem = ((ArrayList) document.get("Imagens"));
-                            Praca p = new Praca(uid,nome, instalacoes,endereco,imagem);
+                            ArrayList imagem = (ArrayList) document.get("Imagens");
+                            String icon = (document.getString("IconUrl"));
+
+                            Praca p = new Praca(uid,nome, instalacoes,endereco,imagem,icon);
                             pracas.add(p);
                             ArrayAdapter adapter = new PracaAdapter(OpcoesDePraca.this,pracas);
                             lista.setAdapter(adapter);
@@ -124,7 +126,8 @@ public class OpcoesDePraca extends AppCompatActivity implements GoogleApiClient.
                 String Instalacoes = itemValue.getFacilidades();
                 String endereco = itemValue.getEndereco();
                 ArrayList imagem = itemValue.getImagem();
-                Log.d("LOG", String.valueOf(imagem));
+                String icon = itemValue.getIcon();
+
 
                 Intent i = new Intent(OpcoesDePraca.this, DetalhesActivity.class);
                 i.putExtra("uid",uid);
@@ -132,8 +135,11 @@ public class OpcoesDePraca extends AppCompatActivity implements GoogleApiClient.
                 i.putExtra("Instalacoes",Instalacoes);
                 i.putExtra("endereco",endereco);
                 i.putExtra("imagem", imagem);
+                i.putExtra("icon", icon);
 
-                 startActivity(i);
+
+
+                startActivity(i);
                 Toast.makeText(getApplicationContext(), "Position :"+itemPosition+"  itemValue : " +uid , Toast.LENGTH_LONG).show();
 
             }
