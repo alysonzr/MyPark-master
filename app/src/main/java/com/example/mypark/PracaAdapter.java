@@ -27,6 +27,7 @@ public class PracaAdapter extends ArrayAdapter<Praca> {
     @Override
     public View getView(int position, View convertView , ViewGroup parent ) {
         LayoutInflater inflater = (LayoutInflater )context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         View rowView = inflater.inflate(R.layout.activity_lista_custom,parent , false );
         TextView nomePraca = ( TextView )rowView.findViewById (R.id.nome );
         TextView instalacoes = ( TextView )rowView.findViewById ( R.id.instalacoes);

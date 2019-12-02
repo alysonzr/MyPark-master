@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import java.lang.Math;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import android.view.View;
@@ -77,8 +78,11 @@ public class OpcoesDePraca extends AppCompatActivity implements GoogleApiClient.
                             String endereco = (document.getString("Endereco"));
                             ArrayList imagem = (ArrayList) document.get("Imagens");
                             String icon = (document.getString("IconUrl"));
+                            ArrayList instalDetalhes = (ArrayList) document.get("InstalaDetalhes");
+                            Number latitude = (Number) document.get("Latitude");
+                            Number longitude = (Number) document.get("Longitude");
 
-                            Praca p = new Praca(uid,nome, instalacoes,endereco,imagem,icon);
+                            Praca p = new Praca(uid,nome, instalacoes,endereco,imagem,icon,instalDetalhes, latitude,longitude);
                             pracas.add(p);
                             ArrayAdapter adapter = new PracaAdapter(OpcoesDePraca.this,pracas);
                             lista.setAdapter(adapter);
@@ -100,8 +104,12 @@ public class OpcoesDePraca extends AppCompatActivity implements GoogleApiClient.
                             String endereco = (document.getString("Endereco"));;
                             ArrayList imagem = (ArrayList) document.get("Imagens");
                             String icon = (document.getString("IconUrl"));
+                            ArrayList instalDetalhes = (ArrayList) document.get("InstalaDetalhes");
+                            Number latitude = (Number) document.get("Latitude");
+                            Number longitude = (Number) document.get("Longitude");
 
-                            Praca p = new Praca(uid,nome, instalacoes,endereco,imagem,icon);
+
+                            Praca p = new Praca(uid,nome, instalacoes,endereco,imagem,icon,instalDetalhes, latitude,longitude);
                             pracas.add(p);
                             ArrayAdapter adapter = new PracaAdapter(OpcoesDePraca.this,pracas);
                             lista.setAdapter(adapter);
@@ -127,6 +135,9 @@ public class OpcoesDePraca extends AppCompatActivity implements GoogleApiClient.
                 String endereco = itemValue.getEndereco();
                 ArrayList imagem = itemValue.getImagem();
                 String icon = itemValue.getIcon();
+                ArrayList instalaDetalhes = itemValue.getInstalaDetalhes();
+                Number latitude = itemValue.getLatitude();
+                Number longitude = itemValue.getLongitude();
 
 
                 Intent i = new Intent(OpcoesDePraca.this, DetalhesActivity.class);
@@ -136,6 +147,10 @@ public class OpcoesDePraca extends AppCompatActivity implements GoogleApiClient.
                 i.putExtra("endereco",endereco);
                 i.putExtra("imagem", imagem);
                 i.putExtra("icon", icon);
+                i.putExtra("instalaDetalhes", instalaDetalhes);
+                i.putExtra("latitude", latitude);
+                i.putExtra("longitude", longitude);
+
 
 
 

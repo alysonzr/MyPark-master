@@ -12,17 +12,48 @@ public class Praca {
     private String facilidades;
     private String endereco;
     private ArrayList imagem;
+    private ArrayList instalaDetalhes;
     private String icon;
+    private Number latitude;
+    private Number longitude;
 
 
-    public Praca(String uid, String nome, String facilidades, String endereco, ArrayList imagem,String icon) {
+    public Praca(String uid, String nome, String facilidades, String endereco, ArrayList imagem,String icon,ArrayList instalaDetalhes, Number latitude, Number longitude) {
         this.uid = uid;
         this.nome = nome;
         this.facilidades = facilidades;
         this.endereco = endereco;
         this.imagem = imagem;
         this.icon = icon;
+        this.instalaDetalhes = instalaDetalhes;
+        this.latitude = latitude;
+        this.longitude = longitude;
 
+    }
+
+
+    public Number getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Number latitude) {
+        this.latitude = latitude;
+    }
+
+    public Number getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Number longitude) {
+        this.longitude = longitude;
+    }
+
+    public ArrayList getInstalaDetalhes() {
+        return instalaDetalhes;
+    }
+
+    public void setInstalaDetalhes(ArrayList instalaDetalhes) {
+        this.instalaDetalhes = instalaDetalhes;
     }
 
     public String getIcon() {
