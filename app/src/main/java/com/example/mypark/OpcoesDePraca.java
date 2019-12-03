@@ -1,13 +1,23 @@
 package com.example.mypark;
+
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
 import java.lang.Math;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -22,8 +32,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -31,31 +46,33 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 
-public class OpcoesDePraca extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class OpcoesDePraca extends AppCompatActivity {
 
     private Location location;
-    protected  static  final int TIMER_RUNTIME = 50000;
+    protected static final int TIMER_RUNTIME = 50000;
     private Double latitudeUsuario;
     private Double longitudeUsuario;
     private Double result;
 
     private GoogleApiClient mGoogleApiClient;
+    FusedLocationProviderClient mFusedLocationClient;
+
     TextView textView2;
     FirebaseFirestore fireStore;
 
-    protected  boolean mbActive;
-    protected ProgressBar nproProgressBar;
+    final ArrayList<DeviceLocation> LatLong = new ArrayList<DeviceLocation>();
 
+    int PERMISSION_ID = 44;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhes_pracas);
         setTitle("MySquare");
         fireStore = FirebaseFirestore.getInstance();
-        callConnection();
         final ListView lista = (ListView) findViewById(R.id.listPracas);
 
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        getLastLocation();
 
         Intent i = getIntent();
         Boolean Skate = i.getBooleanExtra("skatee", false);
@@ -77,21 +94,19 @@ public class OpcoesDePraca extends AppCompatActivity implements GoogleApiClient.
                             String instalacoes = (document.getString("Facilidades"));
                             String endereco = (document.getString("Endereco"));
                             ArrayList imagem = (ArrayList) document.get("Imagens");
-                            String icon = (document.getString("IconUrl"));
-                            ArrayList instalDetalhes = (ArrayList) document.get("InstalaDetalhes");
-                            Number latitude = (Number) document.get("Latitude");
-                            Number longitude = (Number) document.get("Longitude");
+                            Number latitudePraca = (Number) document.get("Latitude");
+                            Number longitudePraca = (Number) document.get("Longitude");
 
-                            Praca p = new Praca(uid,nome, instalacoes,endereco,imagem,icon,instalDetalhes, latitude,longitude);
+                            Praca p = new Praca(uid, nome, instalacoes, endereco, imagem, latitudePraca, longitudePraca);
                             pracas.add(p);
-                            ArrayAdapter adapter = new PracaAdapter(OpcoesDePraca.this,pracas);
+                            ArrayAdapter adapter = new PracaAdapter(OpcoesDePraca.this, pracas);
                             lista.setAdapter(adapter);
                         }
                     }
                 }
             });
         }
-        if(areaCri){
+        if (areaCri) {
             final ArrayList<Praca> pracas = new ArrayList<Praca>();
             fireStore.collection("Parks").document("PracasGravatai").collection("AreaCrianca").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -101,17 +116,15 @@ public class OpcoesDePraca extends AppCompatActivity implements GoogleApiClient.
                             String uid = (document.getId());
                             String nome = (document.getString("Nome"));
                             String instalacoes = (document.getString("Instalacoes"));
-                            String endereco = (document.getString("Endereco"));;
+                            String endereco = (document.getString("Endereco"));
                             ArrayList imagem = (ArrayList) document.get("Imagens");
-                            String icon = (document.getString("IconUrl"));
-                            ArrayList instalDetalhes = (ArrayList) document.get("InstalaDetalhes");
-                            Number latitude = (Number) document.get("Latitude");
-                            Number longitude = (Number) document.get("Longitude");
+                            Number latitudePraca = (Number) document.get("Latitude");
+                            Number longitudePraca = (Number) document.get("Longitude");
 
 
-                            Praca p = new Praca(uid,nome, instalacoes,endereco,imagem,icon,instalDetalhes, latitude,longitude);
+                            Praca p = new Praca(uid, nome, instalacoes, endereco, imagem, latitudePraca, longitudePraca);
                             pracas.add(p);
-                            ArrayAdapter adapter = new PracaAdapter(OpcoesDePraca.this,pracas);
+                            ArrayAdapter adapter = new PracaAdapter(OpcoesDePraca.this, pracas);
                             lista.setAdapter(adapter);
                         }
                     }
@@ -128,59 +141,145 @@ public class OpcoesDePraca extends AppCompatActivity implements GoogleApiClient.
                 int itemPosition = position;
 
                 // ListView Clicked item value
-                Praca  itemValue = (Praca) lista.getItemAtPosition(position);
+                Praca itemValue = (Praca) lista.getItemAtPosition(position);
+                DeviceLocation item = (DeviceLocation) LatLong.get(position);
                 String uid = itemValue.getUid();
                 String nome = itemValue.getNome();
                 String Instalacoes = itemValue.getFacilidades();
                 String endereco = itemValue.getEndereco();
                 ArrayList imagem = itemValue.getImagem();
-                String icon = itemValue.getIcon();
-                ArrayList instalaDetalhes = itemValue.getInstalaDetalhes();
                 Number latitude = itemValue.getLatitude();
                 Number longitude = itemValue.getLongitude();
 
+                Number latitudeDevice = item.getLatitudeDevice();
+                Number longitudeDevice = item.getLongitudeDevide();
+
 
                 Intent i = new Intent(OpcoesDePraca.this, DetalhesActivity.class);
-                i.putExtra("uid",uid);
-                i.putExtra("nome",nome);
-                i.putExtra("Instalacoes",Instalacoes);
-                i.putExtra("endereco",endereco);
+
+                i.putExtra("uid", uid);
+                i.putExtra("nome", nome);
+                i.putExtra("Instalacoes", Instalacoes);
+                i.putExtra("endereco", endereco);
                 i.putExtra("imagem", imagem);
-                i.putExtra("icon", icon);
-                i.putExtra("instalaDetalhes", instalaDetalhes);
                 i.putExtra("latitude", latitude);
                 i.putExtra("longitude", longitude);
 
 
+                i.putExtra("latitudeDevice", latitudeDevice);
+                i.putExtra("longitudeDevice", longitudeDevice);
 
 
                 startActivity(i);
-                Toast.makeText(getApplicationContext(), "Position :"+itemPosition+"  itemValue : " +uid , Toast.LENGTH_LONG).show();
+
 
             }
         });
 
+
     }
-
-
-
-
-
-
-
-    public void updateProgress(final int timePassed){
-            if(null != nproProgressBar){
-                final int progress = nproProgressBar.getMax() * timePassed / TIMER_RUNTIME;
-                nproProgressBar.setProgress(progress);
+    @SuppressLint("MissingPermission")
+    private void getLastLocation(){
+        if (checkPermissions()) {
+            if (isLocationEnabled()) {
+                mFusedLocationClient.getLastLocation().addOnCompleteListener(
+                        new OnCompleteListener<Location>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Location> task) {
+                                Location location = task.getResult();
+                                if (location == null) {
+                                    requestNewLocationData();
+                                } else {
+                                    Number latitude = location.getLatitude();
+                                    Number longitude = location.getLongitude();
+                                    DeviceLocation d = new DeviceLocation(latitude,longitude);
+                                    LatLong.add(d);
+                                }
+                            }
+                        }
+                );
+            } else {
+                Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
             }
+        } else {
+            requestPermissions();
+        }
     }
-    public  void onContinue(){
-            Log.d("MensagemFinal", "sua barra de logging terminou");
+
+    @SuppressLint("MissingPermission")
+    private void requestNewLocationData(){
+
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setNumUpdates(1);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback,
+                Looper.myLooper()
+        );
+
+    }
+    private LocationCallback mLocationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult (LocationResult locationResult) {
+            Location  mLastLocation = locationResult.getLastLocation ();
+            Number latitude = location.getLatitude();
+            Number longitude = location.getLongitude();
+            DeviceLocation d = new DeviceLocation(latitude,longitude);
+            LatLong.add(d);
+        }
+    };
+
+    private boolean checkPermissions(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            return true;
+        }
+        return false;
+    }
+
+    private void requestPermissions(){
+        ActivityCompat.requestPermissions(
+                this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                PERMISSION_ID
+        );
+    }
+
+
+    private boolean isLocationEnabled(){
+        LocationManager locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+                LocationManager.NETWORK_PROVIDER
+        );
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_ID) {
+            if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                // Granted. Start getting the location information
+            }
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (checkPermissions()) {
+            getLastLocation();
+        }
+
     }
 
 
 
-    private synchronized void callConnection() {
+
+    /*private synchronized void callConnection() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addOnConnectionFailedListener(this)
                 .addConnectionCallbacks(this)
@@ -239,7 +338,7 @@ public class OpcoesDePraca extends AppCompatActivity implements GoogleApiClient.
 
     private static Double toRad(Double value) {
         return value * Math.PI / 180;
-    }
+    }*/
 
 
     public Double getLatitudeUsuario() {
@@ -265,4 +364,6 @@ public class OpcoesDePraca extends AppCompatActivity implements GoogleApiClient.
     public void setResult(Double result) {
         this.result = result;
     }
+
+
 }

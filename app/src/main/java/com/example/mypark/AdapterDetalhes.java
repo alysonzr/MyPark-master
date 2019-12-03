@@ -1,20 +1,23 @@
 package com.example.mypark;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AdapterDetalhes {
 
-    public String nomeFacilidades;
+    public List<String> nomeFacilidades;
     public String icon;
 
-    public AdapterDetalhes(String nomeFacilidades, String icon) {
+    public AdapterDetalhes(List nomeFacilidades, String icon) {
         this.nomeFacilidades = nomeFacilidades;
         this.icon = icon;
     }
 
-    public String getNomeFacilidades() {
+    public List getNomeFacilidades() {
         return nomeFacilidades;
     }
 
-    public void setNomeFacilidades(String nomeFacilidades) {
+    public void setNomeFacilidades(List nomeFacilidades) {
         this.nomeFacilidades = nomeFacilidades;
     }
 

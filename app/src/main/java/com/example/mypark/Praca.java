@@ -18,7 +18,7 @@ public class Praca {
     private Number longitude;
 
 
-    public Praca(String uid, String nome, String facilidades, String endereco, ArrayList imagem,String icon,ArrayList instalaDetalhes, Number latitude, Number longitude) {
+    public Praca(String uid, String nome, String facilidades, String endereco, ArrayList imagem, Number latitude, Number longitude) {
         this.uid = uid;
         this.nome = nome;
         this.facilidades = facilidades;
@@ -30,6 +30,7 @@ public class Praca {
         this.longitude = longitude;
 
     }
+
 
 
     public Number getLatitude() {
