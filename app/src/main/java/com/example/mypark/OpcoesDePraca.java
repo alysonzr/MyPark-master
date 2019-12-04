@@ -74,6 +74,7 @@ public class OpcoesDePraca extends AppCompatActivity {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
 
+
         Intent i = getIntent();
         Boolean Skate = i.getBooleanExtra("skatee", false);
         Boolean areaCri = i.getBooleanExtra("AreaCrianca", false);
@@ -143,6 +144,7 @@ public class OpcoesDePraca extends AppCompatActivity {
                 // ListView Clicked item value
                 Praca itemValue = (Praca) lista.getItemAtPosition(position);
                 DeviceLocation item = (DeviceLocation) LatLong.get(position);
+
                 String uid = itemValue.getUid();
                 String nome = itemValue.getNome();
                 String Instalacoes = itemValue.getFacilidades();
@@ -277,48 +279,7 @@ public class OpcoesDePraca extends AppCompatActivity {
     }
 
 
-
-
-    /*private synchronized void callConnection() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addOnConnectionFailedListener(this)
-                .addConnectionCallbacks(this)
-                .addApi(LocationServices.API)
-                .build();
-        mGoogleApiClient.connect();
-    }
-
-
-    // LISTENER
-    @Override
-    public void onConnected(Bundle bundle) {
-        Log.i("LOG", "onConnected(" + bundle + ")");
-
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-        } else {
-            Location l = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-            if (l != null) {
-                latitudeUsuario = l.getLatitude();
-                longitudeUsuario = l.getLongitude();
-                Log.i("LOG", "latitude: " + l.getLatitude());
-                Log.i("LOG", "longitude: " + l.getLongitude());
-            }
-        }
-    }
-
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.i("LOG", "onConnectionSuspended(" + i + ")");
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.i("LOG", "onConnectionFailed(" + connectionResult + ")");
-    }
-
-    public void ConverteLatitude(Double latitude1, Double logitude1, String latitude2, String logitude2) {
+   /* public void ConverteLatitude(Double latitude1, Double logitude1, String latitude2, String logitude2) {
 
         final int R = 6371; // Radious of the earth
         Double lat1 = latitude1;

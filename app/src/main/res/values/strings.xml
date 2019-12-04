@@ -4,5 +4,6 @@
     <string name="title_activity_maps" translatable="false">Map</string>
     <string name="title_activity_detalhes" translatable="false">DetalhesActivity</string>
 
-    <string name="google_maps_key"  translatable="false">AIzaSyByE63yGuu2EMzdKubN1hVXW8rkUu_vQzs</string>
+
+    <string name="google_maps_key">AIzaSyDxXplNAyygp9AhJxS-LW6LrRcpf2ujrIg</string>
 </resources>

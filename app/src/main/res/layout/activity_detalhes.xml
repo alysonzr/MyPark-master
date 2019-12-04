@@ -76,20 +76,15 @@
 
             <fragment
                 xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:map="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_gravity="bottom"
                 android:layout_height="370dp"
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.SupportMapFragment" />
+                tools:context=".MapsActivity"/>
 
-            <Button
-                android:id="@+id/btnObterDistancia"
-                android:layout_width="120dp"
-                android:layout_height="50dp"
-                android:text="Abrir Mapa"
-                android:layout_marginBottom="10dp"
-                app:layout_constraintTop_toTopOf="@id/map"/>
 
             <TextView
                 android:id="@+id/tituloInstacoes"
@@ -99,7 +94,7 @@
                 android:gravity="center"
                 android:textColor="#000000"
                 android:textSize="16dp"
-                app:layout_constraintTop_toTopOf="@id/btnObterDistancia"/>
+                app:layout_constraintTop_toTopOf="@id/map"/>
 
 
 
